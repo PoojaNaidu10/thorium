@@ -1,11 +1,16 @@
+
 let obj = require('../logger/logger.js')
 let helper = require('../util/helper.js')
 let formatter =require('../validator/formatter.js')
 let lodash = require('lodash')
+
+
+
 const express = require('express');
 const router = express.Router();
 
 router.get('/test-me', function (req, res) {
+
     obj.mymsg('Welcome to my application. I am pooja and a part of functioup Thorium cohort')
     helper.printCurrentDate().
     helper.printCurrentMonth()
@@ -42,6 +47,10 @@ router.get('/hello', function (req, res){
     let movieObject = lodash.fromPairs(movie1,movie2.movie3,movie4)
     console.log('Movies object:', movieObject)
 });
+
+
+
+
 
 
 module.exports = router;
