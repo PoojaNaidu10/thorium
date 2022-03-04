@@ -11,5 +11,14 @@ const getUsersData= async function (req, res) {
     res.send({msg: allUsers})
 }
 
+
+const getIpAddressAndTime= async function(req, res){
+    console.log("This is your ip address and time")
+}
+
+
+
+module.exports.getIpAddressAndTime=getIpAddressAndTime
+
 module.exports.createUser= createUser
 module.exports.getUsersData= getUsersData
