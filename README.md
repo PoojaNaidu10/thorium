@@ -11,6 +11,9 @@
 
 
 
+server Link ( Production Server) : 
+
+https://cdn-api.co-vin.in/api  
 
 
 // GIT link..go thourgh this code thoroughly..it will result in a confusion when you are going though the code- postman se hit kar rhe hai and same axios se bhi hit kar rhe hai ..why?
