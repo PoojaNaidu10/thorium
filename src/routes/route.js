@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authorController= require("../controllers/authorController")
 const blogsController= require("../controllers/blogsController")
+const Middleware = require("../middleware/auth")
 
 
 router.get("/test-me", function (req, res) {
@@ -11,17 +12,16 @@ router.get("/test-me", function (req, res) {
 
 router.post("/authors", authorController.createAuthor )
 
-router.post("/createBlogs", blogsController.createBlogs)
+router.post("/createBlogs",Middleware.authenticate, blogsController.createBlogs)
 
-router.get("/getblogdata", blogsController.getBlogdata)
+router.get("/getblogdata", Middleware.authenticate,blogsController.getBlogsData)
 
-router.put("/updateBlogs/:blogId",blogsController.updateBlogs)
+router.put("/updateBlogs/:blogId", Middleware.authenticate,Middleware.authorisation,blogsController.updateBlogs)
 
-router.delete("/delete/:blogId",blogsController.deletBlog)
+router.delete("/delete/:blogId", Middleware.authenticate,Middleware.authorisation,blogsController.deletBlog)
 
-router.delete("/deleteBlogByQuery",blogsController.deleteBlogByQuery)
+router.delete("/deleteBlogByQuery",Middleware.authenticate,Middleware.authorisation,blogsController.deleteBlogByQuery)
 
-
-
+router.post("/loginAuthor", authorController.loginAuthor)
 
 module.exports = router;
