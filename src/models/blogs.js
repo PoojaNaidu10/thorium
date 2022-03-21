@@ -28,10 +28,10 @@ const blogsSchema = new mongoose.Schema( {
        type:String
    },
    deletedAt:{
-       type:String
+       type: Date
    },
    publishedAt:{
-       type:String
+       type: Date
    },
    isDeleted: {
        type:Boolean, 
