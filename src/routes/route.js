@@ -2,11 +2,11 @@ const express = require('express');
 const removeUploadedFiles = require('multer/lib/remove-uploaded-files');
 const router = express.Router();
 const aws = require("aws-sdk")
+const BookController =require("../controller/BookController")
+const UserController = require("../controller/UserController")
 
-
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+router.post("/register",UserController.CreateUser)
+router.post("/books",BookController.CreateBook)
 
 
 
@@ -21,46 +21,45 @@ router.get("/test-me", function (req, res) {
 // - you can never use await on callback..if you have awaited something , then you can be sure that it is inside a promise
 // - how to write promise:- wrap your entire code inside: "return new Promise( function(resolve, reject) { "...and when error - return reject( err )..else when all ok and you have data, return resolve (data)
 
-aws.config.update(
-    {
-        accessKeyId: "AKIAY3L35MCRVFM24Q7U",
-        secretAccessKeyId: "qGG1HE0qRixcW1T1Wg1bv+08tQrIkFVyDFqSft4J",
-        region: "ap-south-1"
-    }
-)
+aws.config.update({
+    accessKeyId: "AKIAY3L35MCRVFM24Q7U",
+    secretAccessKey: "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",
+    region: "ap-south-1"
+})
 
-let uploadFile = async (file) => {
-    return new Promise( function(resolve, reject) {
-        //this function will upload file to aws and return the link
-        let s3 = new aws.S3({ apiVersion: "2006-03-01" }) //we will be using s3 service of aws
-         await uploadFile(files[0])
-        var uploadParams = {
-            ACL: "public-read",
-            Bucket: "classroom-training-bucket", // HERE
-            Key: "radhika/" + file.originalname, // HERE "radhika/smiley.jpg"
-            Body: file.buffer
-        }
-
-      s3.upload(uploadParams, function (err, data) {
-            if (err) { 
-                return reject({ "error": err }) 
+let uploadFile = async(file) => {
+    return new Promise(async function(resolve, reject) {
+            //this function will upload file to aws and return the link
+            let s3 = new aws.S3({ apiVersion: "2006-03-01" }) //we will be using s3 service of aws
+                // await uploadFile(file)
+            var uploadParams = {
+                ACL: "public-read",
+                Bucket: "classroom-training-bucket", // HERE
+                Key: "Pooja/" + file.originalname, // HERE "Pooja/book-cover.jpg"
+                Body: file.buffer
             }
 
-            console.log(data)
-            console.log(" file uploaded succesfully ")
-            return resolve(data.Location) // HERE
-          }
-        )
+            s3.upload(uploadParams, function(err, data) {
+                if (err) {
+                    return reject({ "error": err })
+                }
 
-    // let data= await s3.upload(uploadParams)
-    // if (data) return data.Location
-    // else return "there is an error"
+                console.log(data)
+                console.log(" file uploaded succesfully ")
+                return resolve(data.Location) // HERE
+            })
 
-    }
+            // let data= await s3.upload(uploadParams)
+            // if (data) return data.Location
+            // else return "there is an error"
+
+        }
+
     )
 }
 
-router.post("/write-file-aws", async function (req, res) {
+
+router.post("/write-file-aws", async function(req, res) {
     try {
         let files = req.files
         if (files && files.length > 0) {
@@ -68,15 +67,13 @@ router.post("/write-file-aws", async function (req, res) {
             // res.send the link back to frontend/postman
             let uploadedFileURL = await uploadFile(files[0])
             res.status(201).send({ msg: "file uploaded succesfully", data: uploadedFileURL })
-        }
-        else {
+        } else {
             res.status(400).send({ msg: "No file found" })
         }
-    }
-    catch (err) {
+    } catch (err) {
         res.status(500).send({ msg: err })
     }
-}
-)
+})
+
 
 module.exports = router;
